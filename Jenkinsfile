@@ -3,7 +3,12 @@ pipeline {
 
     tools {
         maven 'Maven'
-        jdk 'JDK17'
+        jdk 'JDK21'   // <-- changed from JDK17
+    }
+
+    environment {
+        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
@@ -16,35 +21,25 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn clean compile'
-                    } else {
-                        bat 'mvn clean compile'
-                    }
-                }
+                echo 'Building the project...'
+                sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'mvn test'
-                    } else {
-                        bat 'mvn test'
-                    }
-                }
+                echo 'Running tests...'
+                sh 'mvn test'
             }
         }
     }
 
     post {
         success {
-            echo 'Build and Tests Successful!'
+            echo '✅ Build and Tests Successful!'
         }
         failure {
-            echo 'Build Failed!'
+            echo '❌ Build Failed!'
         }
     }
 }
