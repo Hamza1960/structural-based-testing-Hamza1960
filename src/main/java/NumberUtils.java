@@ -26,6 +26,12 @@ public class NumberUtils {
         if (left == null || right == null)
             return null;
 
+        if (left.isEmpty() && right.isEmpty()) {
+            LinkedList<Integer> result = new LinkedList<>();
+            result.add(0);
+            return result;
+        }
+
         // reverse the numbers so that the least significant digit goes to the left.
         Collections.reverse(left);
         Collections.reverse(right);
