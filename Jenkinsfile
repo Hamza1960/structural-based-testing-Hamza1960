@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         maven 'Maven'
-        jdk 'JDK21'   // <-- changed from JDK17
+        jdk 'JDK21'       // Use the working JDK
     }
 
     environment {
@@ -15,14 +15,22 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo 'Checking out source code...'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the project...'
+                echo 'Building project...'
                 sh 'mvn clean compile'
+            }
+        }
+
+        stage('Long Running Task') {
+            steps {
+                echo 'Simulating long-running task...'
+                sleep 10      // adjust as needed (seconds)
             }
         }
 
@@ -36,10 +44,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build and Tests Successful!'
+            echo '✅ Build and tests passed!'
         }
         failure {
-            echo '❌ Build Failed!'
+            echo '❌ Build failed. Check the console output.'
         }
     }
 }
